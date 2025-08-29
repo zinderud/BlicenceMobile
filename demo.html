@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blicence Mobile - Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .phone-frame {
+            background: #1a1a1a;
+            border-radius: 30px;
+            padding: 20px;
+            margin: 20px auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 3px solid #333;
+        }
+        .screen {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 20px;
+            color: #333;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #007AFF, #5856D6);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+        }
+        .feature {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border-left: 4px solid #007AFF;
+        }
+        .feature h3 {
+            margin: 0 0 5px 0;
+            color: #007AFF;
+            font-size: 16px;
+        }
+        .feature p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .button {
+            background: #007AFF;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+        .button.secondary {
+            background: #6c757d;
+        }
+        .button.secondary:hover {
+            background: #545b62;
+        }
+        .status {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .tech-item {
+            background: #e9ecef;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #495057;
+        }
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+            text-align: left;
+        }
+        .external-link {
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .external-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Blicence Mobile</h1>
+        <p>Blockchain-based Subscription Management Platform</p>
+        
+        <div class="phone-frame">
+            <div class="screen">
+                <div class="logo">B</div>
+                <h2>Blicence Mobile'a Hoş Geldiniz</h2>
+                <p>Blockchain tabanlı abonelik planlarınızı yönetin</p>
+                
+                <div class="status">
+                    ✅ Metro Bundler çalışıyor: http://localhost:8081
+                </div>
+                
+                <div class="feature">
+                    <h3>🔗 Blockchain Integration</h3>
+                    <p>Polygon ağı üzerinde güvenli işlemler</p>
+                </div>
+                
+                <div class="feature">
+                    <h3>🎨 NFT Marketplace</h3>
+                    <p>Lisans NFT'lerini oluştur ve trade et</p>
+                </div>
+                
+                <div class="feature">
+                    <h3>📱 QR Code System</h3>
+                    <p>Dijital lisans doğrulama sistemi</p>
+                </div>
+                
+                <div class="feature">
+                    <h3>🔔 Real-time Notifications</h3>
+                    <p>Anlık bildirimler ve WebSocket</p>
+                </div>
+                
+                <button class="button" onclick="simulateNavigation()">Başlayın</button>
+                <button class="button secondary" onclick="showTechDetails()">Teknik Detaylar</button>
+            </div>
+        </div>
+        
+        <div class="info-box" id="techDetails" style="display: none;">
+            <h3>🛠️ Teknik Stack</h3>
+            <div class="tech-stack">
+                <div class="tech-item">React Native 0.81</div>
+                <div class="tech-item">TypeScript</div>
+                <div class="tech-item">Redux Toolkit</div>
+                <div class="tech-item">Ethers.js</div>
+                <div class="tech-item">Polygon Network</div>
+                <div class="tech-item">WebSocket</div>
+                <div class="tech-item">Push Notifications</div>
+                <div class="tech-item">Encrypted Storage</div>
+            </div>
+            
+            <h3>📦 Completed Phases</h3>
+            <ul style="text-align: left; margin: 10px 0;">
+                <li>✅ Faz 1: Temel Altyapı</li>
+                <li>✅ Faz 2: Plan Yönetimi</li>
+                <li>✅ Faz 3: NFT & QR Code Sistemi</li>
+                <li>✅ Faz 4: Real-time Bildirimler</li>
+                <li>✅ Faz 5: Production Ready & Deployment</li>
+            </ul>
+        </div>
+        
+        <p>Real cihazda test etmek için:</p>
+        <a href="#" class="external-link" onclick="showDeviceInstructions()">📱 Cihaz Kurulum Talimatları</a>
+        
+        <div id="deviceInstructions" style="display: none; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin: 20px 0; text-align: left;">
+            <h3>📱 Cihazda Test Etme</h3>
+            <h4>Android:</h4>
+            <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; overflow-x: auto;">
+# Android SDK kurulumu
+sudo apt install adb android-tools-adb
+
+# Emülatör başlat veya fiziksel cihaz bağla
+npx react-native run-android
+            </pre>
+            
+            <h4>iOS (macOS'ta):</h4>
+            <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; overflow-x: auto;">
+# iOS bağımlılıkları
+cd ios && pod install && cd ..
+
+# iOS simülatör
+npx react-native run-ios
+            </pre>
+            
+            <h4>Metro Bundler:</h4>
+            <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; overflow-x: auto;">
+# Development server (çalışıyor)
+npm start
+
+# QR Code ile Expo Go (opsiyonel)
+npx expo start
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        function simulateNavigation() {
+            alert('🎉 Blicence Mobile uygulaması başarıyla oluşturuldu!\n\n' +
+                  '✅ 5 Faz tamamlandı\n' +
+                  '✅ Production-ready\n' +
+                  '✅ TypeScript hataları düzeltildi\n' +
+                  '✅ Metro bundler çalışıyor\n\n' +
+                  'Real cihazda test etmek için Android SDK kurmanız gerekiyor.');
+        }
+        
+        function showTechDetails() {
+            const details = document.getElementById('techDetails');
+            details.style.display = details.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function showDeviceInstructions() {
+            const instructions = document.getElementById('deviceInstructions');
+            instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        // Check if Metro bundler is running
+        fetch('http://localhost:8081/status')
+            .then(response => {
+                if (response.ok) {
+                    document.querySelector('.status').innerHTML = 
+                        '✅ Metro Bundler çalışıyor: <a href="http://localhost:8081" target="_blank" style="color: #007AFF;">http://localhost:8081</a>';
+                }
+            })
+            .catch(() => {
+                document.querySelector('.status').innerHTML = 
+                    '⚠️ Metro Bundler çalışmıyor. Terminalden "npm start" çalıştırın.';
+                document.querySelector('.status').style.background = '#f8d7da';
+                document.querySelector('.status').style.color = '#721c24';
+            });
+    </script>
+</body>
+</html>
