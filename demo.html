@@ -154,7 +154,7 @@
                 <p>Blockchain tabanlı abonelik planlarınızı yönetin</p>
                 
                 <div class="status">
-                    ✅ Metro Bundler çalışıyor: http://localhost:8081
+                    ✅ Metro Bundler çalışıyor: http://localhost:8082
                 </div>
                 
                 <div class="feature">
@@ -260,11 +260,11 @@ npx expo start
         }
         
         // Check if Metro bundler is running
-        fetch('http://localhost:8081/status')
+        fetch('http://localhost:8082/status')
             .then(response => {
                 if (response.ok) {
                     document.querySelector('.status').innerHTML = 
-                        '✅ Metro Bundler çalışıyor: <a href="http://localhost:8081" target="_blank" style="color: #007AFF;">http://localhost:8081</a>';
+                        '✅ Metro Bundler çalışıyor: <a href="http://localhost:8082" target="_blank" style="color: #007AFF;">http://localhost:8082</a>';
                 }
             })
             .catch(() => {
