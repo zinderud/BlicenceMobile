@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/router/app_router.dart';
 import '../../../domain/entities/plan.dart';
-import '../../blocs/plan/plan_bloc.dart';
-import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/plan_bloc.dart';
+import '../../blocs/auth_bloc.dart';
 
 class MarketplaceScreen extends StatefulWidget {
   const MarketplaceScreen({super.key});
@@ -24,7 +24,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   }
 
   void _loadAllPlans() {
-    context.read<PlanBloc>().add(LoadPlans());
+    context.read<PlanBloc>().add(LoadAllPlans());
   }
 
   void _searchPlans() {
@@ -120,7 +120,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                 builder: (context, state) {
                   if (state is PlanLoading) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is PlansLoaded) {
+                  } else if (state is PlanLoaded) {
                     if (state.plans.isEmpty) {
                       return const Center(
                         child: Column(
@@ -298,8 +298,8 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
             ElevatedButton(
               onPressed: () {
                 context.read<PlanBloc>().add(PurchasePlan(
-                                  planId: plan.planId, 
-                                  customerId: 1, // Mock customer ID
+                                  planId: plan.planId.toString(), 
+                                  customerId: '1', // Mock customer ID
                                 ));
                 Navigator.of(context).pop();
               },
