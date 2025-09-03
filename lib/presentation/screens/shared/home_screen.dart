@@ -50,6 +50,13 @@ class HomeScreen extends StatelessWidget {
                   ),
                   _buildFeatureCard(
                     context,
+                    'Mock Veriler Test',
+                    'Test için mock veriler',
+                    Icons.bug_report,
+                    () => context.go(AppRouter.test),
+                  ),
+                  _buildFeatureCard(
+                    context,
                     'Müşteri Paneli',
                     'Planlarınızı yönetin',
                     Icons.person,
