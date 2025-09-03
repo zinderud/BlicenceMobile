@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'simple_test_page.dart';
+import 'presentation/pages/feature_test_dashboard.dart';
 import 'app/router/app_router.dart';
 import 'app/theme/app_theme.dart';
 import 'core/storage/hive_service.dart';
@@ -53,11 +53,10 @@ void main() async {
           create: (context) => sl<PlanBloc>(),
         ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'Blicence Mobile',
         theme: AppTheme.lightTheme,
-        home: const SimpleTestPage(), // Geçici olarak test sayfası
-        // routerConfig: _router,
+        routerConfig: _router, // Use router configuration
         debugShowCheckedModeBanner: false,
       ),
     );
