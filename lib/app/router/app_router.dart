@@ -5,6 +5,7 @@ import '../../presentation/screens/shared/home_screen.dart';
 import '../../presentation/screens/customer/customer_dashboard_screen.dart';
 import '../../presentation/screens/producer/producer_dashboard_screen.dart';
 import '../../presentation/screens/marketplace/marketplace_screen.dart';
+import '../../presentation/screens/wallet/wallet_connection_screen.dart';
 import '../../presentation/pages/plans/plans_page.dart';
 
 class AppRouter {
@@ -13,6 +14,7 @@ class AppRouter {
   static const String customerDashboard = '/customer';
   static const String producerDashboard = '/producer';
   static const String marketplace = '/marketplace';
+  static const String wallet = '/wallet';
   static const String plans = '/plans';
 
   static final GoRouter router = GoRouter(
@@ -37,6 +39,10 @@ class AppRouter {
       GoRoute(
         path: marketplace,
         builder: (BuildContext context, GoRouterState state) => const MarketplaceScreen(),
+      ),
+      GoRoute(
+        path: wallet,
+        builder: (BuildContext context, GoRouterState state) => const WalletConnectionScreen(),
       ),
       GoRoute(
         path: plans,

@@ -74,7 +74,7 @@ class HomeScreen extends StatelessWidget {
                     'Wallet',
                     'Cüzdan bağlayın',
                     Icons.wallet,
-                    () => _showComingSoon(context),
+                    () => context.go(AppRouter.wallet),
                   ),
                 ],
               ),

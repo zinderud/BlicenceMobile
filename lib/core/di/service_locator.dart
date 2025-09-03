@@ -7,6 +7,7 @@ import '../../domain/repositories/user_repository.dart';
 import '../../domain/repositories/plan_repository.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/plan/plan_bloc.dart';
+import '../services/firebase/firebase_service.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -14,6 +15,7 @@ Future<void> initializeDependencies() async {
   // Services
   sl.registerLazySingleton<LocalStorageService>(() => LocalStorageService());
   sl.registerLazySingleton<BlockchainService>(() => BlockchainService.instance);
+  sl.registerLazySingleton<FirebaseService>(() => FirebaseService());
 
     // Repositories
   sl.registerLazySingleton<UserRepository>(
