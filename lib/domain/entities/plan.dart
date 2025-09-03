@@ -34,6 +34,19 @@ class Plan extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   final Map<String, dynamic> metadata;
+  
+  // Repository implementation fields
+  final int duration; // Duration in days
+  final int maxUsage; // Max usage count
+  final List<String> features; // Plan features
+  final String imageUrl; // Image URL
+  final String category; // Plan category
+  final List<String> tags; // Plan tags
+  final int vestingPeriod; // Vesting period in days
+  final int cliffPeriod; // Cliff period in days
+  final String apiEndpoint; // API endpoint for API plans
+  final List<dynamic> customers; // Customer list
+  final int totalCustomers; // Total customer count
 
   const Plan({
     required this.planId,
@@ -59,6 +72,17 @@ class Plan extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     this.metadata = const {},
+    this.duration = 0,
+    this.maxUsage = 0,
+    this.features = const [],
+    this.imageUrl = '',
+    this.category = '',
+    this.tags = const [],
+    this.vestingPeriod = 0,
+    this.cliffPeriod = 0,
+    this.apiEndpoint = '',
+    this.customers = const [],
+    this.totalCustomers = 0,
   });
 
   @override
@@ -86,6 +110,17 @@ class Plan extends Equatable {
         createdAt,
         updatedAt,
         metadata,
+        duration,
+        maxUsage,
+        features,
+        imageUrl,
+        category,
+        tags,
+        vestingPeriod,
+        cliffPeriod,
+        apiEndpoint,
+        customers,
+        totalCustomers,
       ];
 
   Plan copyWith({

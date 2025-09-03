@@ -6,134 +6,267 @@ import '../../domain/repositories/plan_repository.dart';
 import '../datasources/local/local_storage_service.dart';
 
 class PlanRepositoryImpl implements PlanRepository {
-  final LocalStorageService _localStorage;
+  final LocalStorageService localStorage;
 
-  PlanRepositoryImpl({required LocalStorageService localStorage})
-      : _localStorage = localStorage;
+  PlanRepositoryImpl({required this.localStorage});
+
+  // Mock data for testing
+  static final List<Plan> _mockPlans = [
+    Plan(
+      planId: 1,
+      producerId: 1,
+      cloneAddress: '0x1234567890123456789012345678901234567890',
+      name: 'Premium Gym Membership',
+      description: 'Full access to all gym facilities including pool, sauna, and classes',
+      totalSupply: 100,
+      priceAddress: '0x0000000000000000000000000000000000000000',
+      startDate: DateTime.now(),
+      price: 99.99,
+      duration: 30,
+      maxUsage: 0,
+      planType: PlanType.api,
+      status: PlanStatus.active,
+      features: ['Unlimited gym access', 'Pool access', 'Group classes', 'Personal trainer consultation'],
+      imageUrl: 'https://example.com/gym.jpg',
+      category: 'Fitness',
+      tags: ['gym', 'fitness', 'health'],
+      vestingPeriod: 0,
+      cliffPeriod: 0,
+      apiEndpoint: 'https://api.gym.com/access',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Plan(
+      planId: 2,
+      producerId: 2,
+      cloneAddress: '0x2345678901234567890123456789012345678901',
+      name: 'Coffee Loyalty Card',
+      description: '10 coffee purchases with loyalty rewards',
+      totalSupply: 50,
+      priceAddress: '0x0000000000000000000000000000000000000000',
+      startDate: DateTime.now(),
+      price: 45.00,
+      duration: 0,
+      maxUsage: 10,
+      planType: PlanType.nUsage,
+      status: PlanStatus.active,
+      features: ['10 coffee purchases', 'Free pastry after 5th coffee', 'Premium coffee beans'],
+      imageUrl: 'https://example.com/coffee.jpg',
+      category: 'Food & Beverage',
+      tags: ['coffee', 'loyalty', 'rewards'],
+      vestingPeriod: 0,
+      cliffPeriod: 0,
+      apiEndpoint: '',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Plan(
+      planId: 3,
+      producerId: 3,
+      cloneAddress: '0x3456789012345678901234567890123456789012',
+      name: 'Educational Course Access',
+      description: 'Vested access to premium educational content over 6 months',
+      totalSupply: 30,
+      priceAddress: '0x0000000000000000000000000000000000000000',
+      startDate: DateTime.now(),
+      price: 299.99,
+      duration: 180,
+      maxUsage: 0,
+      planType: PlanType.vestingApi,
+      status: PlanStatus.active,
+      features: ['Progressive content unlock', 'Certificate upon completion', 'Mentor support'],
+      imageUrl: 'https://example.com/education.jpg',
+      category: 'Education',
+      tags: ['education', 'course', 'vesting'],
+      vestingPeriod: 180,
+      cliffPeriod: 30,
+      apiEndpoint: 'https://api.education.com/course',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+  ];
 
   @override
   Future<Either<String, List<Plan>>> getPlans() async {
     try {
-      // Mock data for now
-      final mockPlans = _getMockPlans();
-      return Right(mockPlans);
+      // In a real implementation, this would fetch from a blockchain or API
+      await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
+      return Right(_mockPlans);
     } catch (e) {
-      return Left('Failed to get plans: $e');
+      return Left('Failed to get plans: ${e.toString()}');
     }
   }
 
   @override
   Future<Either<String, List<Plan>>> getPlansByProducer(int producerId) async {
     try {
-      final allPlans = _getMockPlans();
-      final producerPlans = allPlans.where((plan) => plan.producerId == producerId).toList();
-      return Right(producerPlans);
+      await Future.delayed(const Duration(milliseconds: 300));
+      final filteredPlans = _mockPlans.where((plan) => plan.producerId == producerId).toList();
+      return Right(filteredPlans);
     } catch (e) {
-      return Left('Failed to get producer plans: $e');
+      return Left('Failed to get plans by producer: ${e.toString()}');
     }
   }
 
   @override
   Future<Either<String, Plan>> getPlanById(int planId) async {
     try {
-      final allPlans = _getMockPlans();
-      final plan = allPlans.firstWhere((p) => p.planId == planId);
+      await Future.delayed(const Duration(milliseconds: 200));
+      final plan = _mockPlans.firstWhere(
+        (plan) => plan.planId == planId,
+        orElse: () => throw Exception('Plan not found'),
+      );
       return Right(plan);
     } catch (e) {
-      return Left('Plan not found: $planId');
+      return Left('Failed to get plan by ID: ${e.toString()}');
     }
   }
 
   @override
   Future<Either<String, Plan>> createPlan(Plan plan) async {
     try {
-      // In real implementation, this would call blockchain service
-      return Right(plan);
+      await Future.delayed(const Duration(milliseconds: 800));
+      // In a real implementation, this would create the plan on blockchain
+      final newPlan = plan.copyWith(
+        planId: _mockPlans.length + 1,
+        status: PlanStatus.active,
+      );
+      _mockPlans.add(newPlan);
+      return Right(newPlan);
     } catch (e) {
-      return Left('Failed to create plan: $e');
+      return Left('Failed to create plan: ${e.toString()}');
     }
   }
 
   @override
   Future<Either<String, List<CustomerPlan>>> getCustomerPlans(String customerAddress) async {
     try {
+      await Future.delayed(const Duration(milliseconds: 400));
       // Mock customer plans
-      return Right([]);
+      final customerPlans = [
+        CustomerPlan(
+          customerPlanId: 1,
+          planId: 1,
+          producerId: 1,
+          cloneAddress: '0x1234567890123456789012345678901234567890',
+          priceAddress: '0x0000000000000000000000000000000000000000',
+          customerAddress: customerAddress,
+          startDate: DateTime.now().subtract(const Duration(days: 5)),
+          endDate: DateTime.now().add(const Duration(days: 25)),
+          planType: PlanType.api,
+          purchaseDate: DateTime.now().subtract(const Duration(days: 5)),
+          expiryDate: DateTime.now().add(const Duration(days: 25)),
+          usageCount: 5,
+          lastUsed: DateTime.now().subtract(const Duration(days: 1)),
+          vestingStartDate: DateTime.now().subtract(const Duration(days: 5)),
+          claimedAmount: 0,
+          totalVestingAmount: 0,
+        ),
+      ];
+      return Right(customerPlans);
     } catch (e) {
-      return Left('Failed to get customer plans: $e');
+      return Left('Failed to get customer plans: ${e.toString()}');
     }
   }
 
   @override
   Future<Either<String, CustomerPlan>> purchasePlan(int planId, String customerAddress) async {
     try {
-      final planResult = await getPlanById(planId);
-      return planResult.fold(
-        (error) => Left(error),
-        (plan) {
-          final customerPlan = CustomerPlan(
-            id: DateTime.now().millisecondsSinceEpoch.toString(),
-            planId: planId,
-            customerId: customerAddress,
-            startDate: DateTime.now(),
-            endDate: DateTime.now().add(const Duration(days: 30)),
-            status: PlanStatus.active,
-            planType: plan.planType,
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          );
-          return Right(customerPlan);
-        },
+      await Future.delayed(const Duration(milliseconds: 1000));
+      final plan = _mockPlans.firstWhere(
+        (p) => p.planId == planId,
+        orElse: () => throw Exception('Plan not found'),
       );
+      
+      final customerPlan = CustomerPlan(
+        customerPlanId: DateTime.now().millisecondsSinceEpoch,
+        planId: planId,
+        producerId: plan.producerId,
+        cloneAddress: plan.cloneAddress,
+        priceAddress: plan.priceAddress,
+        customerAddress: customerAddress,
+        startDate: DateTime.now(),
+        endDate: plan.duration > 0 
+          ? DateTime.now().add(Duration(days: plan.duration))
+          : DateTime.now().add(const Duration(days: 365)),
+        planType: plan.planType,
+        purchaseDate: DateTime.now(),
+        expiryDate: plan.duration > 0 
+          ? DateTime.now().add(Duration(days: plan.duration))
+          : DateTime.now().add(const Duration(days: 365)),
+        usageCount: 0,
+        lastUsed: null,
+        vestingStartDate: plan.planType == PlanType.vestingApi ? DateTime.now() : null,
+        claimedAmount: 0,
+        totalVestingAmount: plan.planType == PlanType.vestingApi ? plan.price : 0,
+      );
+      
+      return Right(customerPlan);
     } catch (e) {
-      return Left('Failed to purchase plan: $e');
+      return Left('Failed to purchase plan: ${e.toString()}');
     }
   }
 
   @override
   Future<Either<String, PlanInfoApi>> getApiPlanInfo(int planId) async {
     try {
+      await Future.delayed(const Duration(milliseconds: 300));
       return Right(PlanInfoApi(
         planId: planId,
-        apiEndpoint: 'https://api.example.com',
-        apiKey: 'sample-key',
-        requestsPerDay: 1000,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        flowRate: 0.1,
+        perMonthLimit: 1000,
+        apiEndpoint: 'https://api.example.com/plan/$planId',
+        accessToken: 'mock_token_${DateTime.now().millisecondsSinceEpoch}',
+        requestLimit: 1000,
+        requestsUsed: 45,
       ));
     } catch (e) {
-      return Left('Failed to get API plan info: $e');
+      return Left('Failed to get API plan info: ${e.toString()}');
     }
   }
 
   @override
   Future<Either<String, PlanInfoVesting>> getVestingPlanInfo(int planId) async {
     try {
+      await Future.delayed(const Duration(milliseconds: 300));
       return Right(PlanInfoVesting(
         planId: planId,
-        vestingDuration: const Duration(days: 365),
-        releaseSchedule: ['25% at 3 months', '25% at 6 months', '50% at 12 months'],
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        cliffDate: DateTime.now().subtract(const Duration(days: 0)),
+        flowRate: 0.05,
+        startAmount: 299.99,
+        totalAmount: 299.99,
+        vestedAmount: 50.0,
+        claimedAmount: 25.0,
+        vestingStartDate: DateTime.now().subtract(const Duration(days: 30)),
+        vestingEndDate: DateTime.now().add(const Duration(days: 150)),
+        lastClaimDate: DateTime.now().subtract(const Duration(days: 7)),
       ));
     } catch (e) {
-      return Left('Failed to get vesting plan info: $e');
+      return Left('Failed to get vesting plan info: ${e.toString()}');
     }
   }
 
   @override
   Future<Either<String, PlanInfoNUsage>> getNUsagePlanInfo(int planId) async {
     try {
+      await Future.delayed(const Duration(milliseconds: 300));
       return Right(PlanInfoNUsage(
         planId: planId,
-        totalUsages: 100,
-        usedCount: 0,
-        resetPeriod: const Duration(days: 30),
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        oneUsagePrice: 4.5,
+        minUsageLimit: 1,
+        maxUsageLimit: 10,
+        maxUsage: 10,
+        currentUsage: 3,
+        remainingUsage: 7,
+        lastUsageDate: DateTime.now().subtract(const Duration(hours: 6)),
+        usageHistory: [
+          DateTime.now().subtract(const Duration(days: 5)),
+          DateTime.now().subtract(const Duration(days: 3)),
+          DateTime.now().subtract(const Duration(hours: 6)),
+        ],
       ));
     } catch (e) {
-      return Left('Failed to get usage plan info: $e');
+      return Left('Failed to get N-usage plan info: ${e.toString()}');
     }
   }
 
@@ -144,93 +277,34 @@ class PlanRepositoryImpl implements PlanRepository {
     PlanStatus? status,
   }) async {
     try {
-      var plans = _getMockPlans();
-      
+      await Future.delayed(const Duration(milliseconds: 400));
+      var filteredPlans = List<Plan>.from(_mockPlans);
+
       if (query != null && query.isNotEmpty) {
-        plans = plans.where((plan) => 
+        filteredPlans = filteredPlans.where((plan) =>
           plan.name.toLowerCase().contains(query.toLowerCase()) ||
-          plan.description.toLowerCase().contains(query.toLowerCase())
+          plan.description.toLowerCase().contains(query.toLowerCase()) ||
+          plan.category.toLowerCase().contains(query.toLowerCase())
         ).toList();
       }
-      
+
       if (type != null) {
-        plans = plans.where((plan) => plan.planType == type).toList();
+        filteredPlans = filteredPlans.where((plan) => plan.planType == type).toList();
       }
-      
+
       if (status != null) {
-        plans = plans.where((plan) => plan.status == status).toList();
+        filteredPlans = filteredPlans.where((plan) => plan.status == status).toList();
       }
-      
-      return Right(plans);
+
+      return Right(filteredPlans);
     } catch (e) {
-      return Left('Failed to search plans: $e');
+      return Left('Failed to search plans: ${e.toString()}');
     }
   }
 
   @override
   Stream<List<Plan>> plansStream() {
-    return Stream.periodic(const Duration(seconds: 30), (_) => _getMockPlans());
-  }
-
-  List<Plan> _getMockPlans() {
-    return [
-      Plan(
-        planId: 1,
-        cloneAddress: '0x1234567890123456789012345678901234567890',
-        producerId: 1,
-        name: 'Premium Gym API Access',
-        description: 'Unlimited access to gym facilities with digital check-ins',
-        totalSupply: 100,
-        currentSupply: 25,
-        priceAddress: '0xA0b86a33E6441B8Db08D1Df1C2C2A1c6e6D3e8A1',
-        startDate: DateTime.now().subtract(const Duration(days: 30)),
-        planType: PlanType.api,
-        status: PlanStatus.active,
-        price: 49.99,
-        currency: 'USDC',
-        producerName: 'FitnessTech',
-        rating: 4.5,
-        createdAt: DateTime.now().subtract(const Duration(days: 30)),
-        updatedAt: DateTime.now(),
-      ),
-      Plan(
-        planId: 2,
-        cloneAddress: '0x2345678901234567890123456789012345678901',
-        producerId: 2,
-        name: 'Coffee Loyalty Points',
-        description: '10 coffee purchases with bonus rewards',
-        totalSupply: 200,
-        currentSupply: 150,
-        priceAddress: '0xB1c97a44F7552B9Ec18D2Df2D3D3B2d7f7E4f9B2',
-        startDate: DateTime.now().subtract(const Duration(days: 15)),
-        planType: PlanType.nUsage,
-        status: PlanStatus.active,
-        price: 29.99,
-        currency: 'USDC',
-        producerName: 'CoffeeChain',
-        rating: 4.2,
-        createdAt: DateTime.now().subtract(const Duration(days: 15)),
-        updatedAt: DateTime.now(),
-      ),
-      Plan(
-        planId: 3,
-        cloneAddress: '0x3456789012345678901234567890123456789012',
-        producerId: 3,
-        name: 'Educational Platform Vesting',
-        description: 'Access to premium courses with graduated unlock',
-        totalSupply: 50,
-        currentSupply: 10,
-        priceAddress: '0xC2d08b55G8663C0Fd29E3Df3E4E4C3e8g8F5g0C3',
-        startDate: DateTime.now().subtract(const Duration(days: 5)),
-        planType: PlanType.vestingApi,
-        status: PlanStatus.active,
-        price: 199.99,
-        currency: 'USDC',
-        producerName: 'EduTech Pro',
-        rating: 4.8,
-        createdAt: DateTime.now().subtract(const Duration(days: 5)),
-        updatedAt: DateTime.now(),
-      ),
-    ];
+    // In a real implementation, this would stream from blockchain events
+    return Stream.periodic(const Duration(seconds: 5), (_) => _mockPlans);
   }
 }

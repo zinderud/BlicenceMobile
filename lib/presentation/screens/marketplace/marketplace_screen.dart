@@ -297,9 +297,9 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                                context.read<PlanBloc>().add(PurchasePlan(
-                                  planId: plan.planId, 
-                                  customerId: 1, // Mock customer ID
+                context.read<PlanBloc>().add(PurchasePlan(
+                                  planId: plan.planId.toString(), 
+                                  customerId: '1', // Mock customer ID
                                 ));
                 Navigator.of(context).pop();
               },

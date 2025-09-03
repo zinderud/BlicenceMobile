@@ -501,7 +501,7 @@ class _PlansPageState extends State<PlansPage> {
               context.read<PlanBloc>().add(
                 PurchasePlan(
                   planId: plan.planId,
-                  customerAddress: customerAddress,
+                  customerId: 1, // Mock customer ID
                 ),
               );
             },

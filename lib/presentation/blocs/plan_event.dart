@@ -4,7 +4,7 @@ abstract class PlanEvent extends Equatable {
   const PlanEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class LoadAllPlans extends PlanEvent {}
@@ -15,7 +15,7 @@ class LoadPlansByProducer extends PlanEvent {
   const LoadPlansByProducer(this.producerId);
 
   @override
-  List<Object> get props => [producerId];
+  List<Object?> get props => [producerId];
 }
 
 class LoadPlansByCustomer extends PlanEvent {
@@ -24,7 +24,7 @@ class LoadPlansByCustomer extends PlanEvent {
   const LoadPlansByCustomer(this.customerId);
 
   @override
-  List<Object> get props => [customerId];
+  List<Object?> get props => [customerId];
 }
 
 class CreatePlan extends PlanEvent {
@@ -33,7 +33,7 @@ class CreatePlan extends PlanEvent {
   const CreatePlan(this.plan);
 
   @override
-  List<Object> get props => [plan];
+  List<Object?> get props => [plan];
 }
 
 class UpdatePlan extends PlanEvent {
@@ -42,7 +42,7 @@ class UpdatePlan extends PlanEvent {
   const UpdatePlan(this.plan);
 
   @override
-  List<Object> get props => [plan];
+  List<Object?> get props => [plan];
 }
 
 class PurchasePlan extends PlanEvent {
@@ -55,7 +55,7 @@ class PurchasePlan extends PlanEvent {
   });
 
   @override
-  List<Object> get props => [planId, customerId];
+  List<Object?> get props => [planId, customerId];
 }
 
 class SearchPlans extends PlanEvent {

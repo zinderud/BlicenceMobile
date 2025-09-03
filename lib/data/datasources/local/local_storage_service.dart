@@ -1,4 +1,5 @@
 import '../../../core/storage/hive_service.dart';
+import '../../../domain/entities/plan.dart';
 
 class LocalStorageService {
   static const String _userKey = 'current_user';
@@ -46,21 +47,23 @@ class LocalStorageService {
     await savePlans(plans);
   }
 
-  Future<void> updatePlan(String planId, Plan updatedPlan) async {
+  Future<void> updatePlan(int planId, Plan updatedPlan) async {
     final plans = await getPlans();
-    final index = plans.indexWhere((p) => p.planId == planId);
+    final planMaps = plans; // plans is already List<Map<String, dynamic>>
+    final index = planMaps.indexWhere((p) => p['planId'] == planId);
     if (index >= 0) {
-      plans[index] = updatedPlan;
-      await savePlans(plans);
+      planMaps[index] = updatedPlan.toJson();
+      await HiveService.saveUserData(_plansKey, planMaps);
     } else {
       throw Exception('Plan bulunamadı: $planId');
     }
   }
 
-  Future<void> deletePlan(String planId) async {
+  Future<void> deletePlan(int planId) async {
     final plans = await getPlans();
-    plans.removeWhere((p) => p.planId == planId);
-    await savePlans(plans);
+    final planMaps = plans; // plans is already List<Map<String, dynamic>>
+    planMaps.removeWhere((p) => p['planId'] == planId);
+    await HiveService.saveUserData(_plansKey, planMaps);
   }
 
   Future<void> clearPlans() async {

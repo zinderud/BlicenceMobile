@@ -280,25 +280,24 @@ class _ProducerDashboardScreenState extends State<ProducerDashboardScreen> {
                   final authState = this.context.read<AuthBloc>().state;
                   if (authState is AuthAuthenticated) {
                     final plan = Plan(
-                      planId: DateTime.now().millisecondsSinceEpoch,
+                      planId: 0, // Will be set by backend
                       cloneAddress: '0x0000000000000000000000000000000000000000',
-                      producerId: authState.user.id,
+                      producerId: int.parse(authState.user.id),
                       name: nameController.text,
                       description: descriptionController.text,
                       totalSupply: int.parse(capacityController.text),
                       priceAddress: '0x0000000000000000000000000000000000000000',
                       startDate: DateTime.now(),
                       planType: selectedType,
+                      status: PlanStatus.active,
                       price: double.parse(priceController.text),
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
-                      isActive: true,
                       customers: [],
                       totalCustomers: 0,
                       rating: 0.0,
                       reviews: [],
-                      createdAt: DateTime.now(),
-                      updatedAt: DateTime.now(),
+                      metadata: {},
                     );
                     
                     this.context.read<PlanBloc>().add(CreatePlan(plan));

@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/plan.dart';
+import '../../domain/entities/customer_plan.dart';
 import '../../domain/usecases/plan_usecases.dart';
 
 part 'plan_event.dart';
@@ -43,8 +44,11 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
   ) async {
     emit(PlanLoading());
     try {
-      final plans = await _getAllPlansUseCase();
-      emit(PlanLoaded(plans));
+      final result = await _getAllPlansUseCase();
+      result.fold(
+        (error) => emit(PlanError(error)),
+        (plans) => emit(PlanLoaded(plans)),
+      );
     } catch (e) {
       emit(PlanError(e.toString()));
     }
@@ -56,8 +60,11 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
   ) async {
     emit(PlanLoading());
     try {
-      final plans = await _getPlansByProducerUseCase(event.producerId);
-      emit(PlanLoaded(plans));
+      final result = await _getPlansByProducerUseCase(int.parse(event.producerId));
+      result.fold(
+        (error) => emit(PlanError(error)),
+        (plans) => emit(PlanLoaded(plans)),
+      );
     } catch (e) {
       emit(PlanError(e.toString()));
     }
@@ -69,8 +76,11 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
   ) async {
     emit(PlanLoading());
     try {
-      final plans = await _getPlansByCustomerUseCase(event.customerId);
-      emit(PlanLoaded(plans));
+      final result = await _getPlansByCustomerUseCase(event.customerId);
+      result.fold(
+        (error) => emit(PlanError(error)),
+        (customerPlans) => emit(CustomerPlansLoaded(customerPlans)),
+      );
     } catch (e) {
       emit(PlanError(e.toString()));
     }
@@ -82,8 +92,11 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
   ) async {
     emit(PlanLoading());
     try {
-      final plan = await _createPlanUseCase(event.plan);
-      emit(PlanCreated(plan));
+      final result = await _createPlanUseCase(event.plan);
+      result.fold(
+        (error) => emit(PlanError(error)),
+        (plan) => emit(PlanCreated(plan)),
+      );
     } catch (e) {
       emit(PlanError(e.toString()));
     }
@@ -108,8 +121,11 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
   ) async {
     emit(PlanLoading());
     try {
-      final plan = await _purchasePlanUseCase(event.planId, event.customerId);
-      emit(PlanPurchased(plan));
+      final result = await _purchasePlanUseCase(int.parse(event.planId), event.customerId);
+      result.fold(
+        (error) => emit(PlanError(error)),
+        (customerPlan) => emit(PlanPurchased(customerPlan)),
+      );
     } catch (e) {
       emit(PlanError(e.toString()));
     }
@@ -121,13 +137,16 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
   ) async {
     emit(PlanLoading());
     try {
-      final plans = await _searchPlansUseCase(
+      final result = await _searchPlansUseCase(
         query: event.query,
         type: event.type,
         minPrice: event.minPrice,
         maxPrice: event.maxPrice,
       );
-      emit(PlanLoaded(plans));
+      result.fold(
+        (error) => emit(PlanError(error)),
+        (plans) => emit(PlanLoaded(plans)),
+      );
     } catch (e) {
       emit(PlanError(e.toString()));
     }

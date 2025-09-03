@@ -6,15 +6,25 @@ class PlanInfoApi extends Equatable {
   final int planId; // uint256 planId
   final double flowRate; // uint256 flowRate (cost per second in wei)
   final int perMonthLimit; // uint256 perMonthLimit (max tokens per month)
+  
+  // Repository implementation fields
+  final String apiEndpoint;
+  final String accessToken;
+  final int requestLimit;
+  final int requestsUsed;
 
   const PlanInfoApi({
     required this.planId,
     required this.flowRate,
     required this.perMonthLimit,
+    this.apiEndpoint = '',
+    this.accessToken = '',
+    this.requestLimit = 0,
+    this.requestsUsed = 0,
   });
 
   @override
-  List<Object?> get props => [planId, flowRate, perMonthLimit];
+  List<Object?> get props => [planId, flowRate, perMonthLimit, apiEndpoint, accessToken, requestLimit, requestsUsed];
 
   PlanInfoApi copyWith({
     int? planId,
@@ -60,6 +70,14 @@ class PlanInfoVesting extends Equatable {
   final double flowRate; // uint256 flowRate
   final double startAmount; // uint256 startAmount
   final String ctx; // bytes ctx (context data)
+  
+  // Repository implementation fields
+  final double totalAmount;
+  final double vestedAmount;
+  final double claimedAmount;
+  final DateTime vestingStartDate;
+  final DateTime vestingEndDate;
+  final DateTime? lastClaimDate;
 
   const PlanInfoVesting({
     required this.planId,
@@ -67,10 +85,16 @@ class PlanInfoVesting extends Equatable {
     required this.flowRate,
     required this.startAmount,
     this.ctx = '',
+    this.totalAmount = 0.0,
+    this.vestedAmount = 0.0,
+    this.claimedAmount = 0.0,
+    required this.vestingStartDate,
+    required this.vestingEndDate,
+    this.lastClaimDate,
   });
 
   @override
-  List<Object?> get props => [planId, cliffDate, flowRate, startAmount, ctx];
+  List<Object?> get props => [planId, cliffDate, flowRate, startAmount, ctx, totalAmount, vestedAmount, claimedAmount, vestingStartDate, vestingEndDate, lastClaimDate];
 
   PlanInfoVesting copyWith({
     int? planId,
@@ -85,6 +109,12 @@ class PlanInfoVesting extends Equatable {
       flowRate: flowRate ?? this.flowRate,
       startAmount: startAmount ?? this.startAmount,
       ctx: ctx ?? this.ctx,
+      totalAmount: this.totalAmount,
+      vestedAmount: this.vestedAmount,
+      claimedAmount: this.claimedAmount,
+      vestingStartDate: this.vestingStartDate,
+      vestingEndDate: this.vestingEndDate,
+      lastClaimDate: this.lastClaimDate,
     );
   }
 
@@ -119,6 +149,11 @@ class PlanInfoVesting extends Equatable {
       flowRate: (json['flowRate'] as num).toDouble(),
       startAmount: (json['startAmount'] as num).toDouble(),
       ctx: json['ctx'] as String? ?? '',
+      totalAmount: (json['totalAmount'] as num?)?.toDouble() ?? 0.0,
+      vestedAmount: (json['vestedAmount'] as num?)?.toDouble() ?? 0.0,
+      claimedAmount: (json['claimedAmount'] as num?)?.toDouble() ?? 0.0,
+      vestingStartDate: DateTime.fromMillisecondsSinceEpoch((json['vestingStartDate'] as int?) ?? DateTime.now().millisecondsSinceEpoch),
+      vestingEndDate: DateTime.fromMillisecondsSinceEpoch((json['vestingEndDate'] as int?) ?? DateTime.now().add(Duration(days: 365)).millisecondsSinceEpoch),
     );
   }
 }
@@ -130,16 +165,28 @@ class PlanInfoNUsage extends Equatable {
   final double oneUsagePrice; // uint256 oneUsagePrice (cost per usage in wei)
   final int minUsageLimit; // uint32 minUsageLimit
   final int maxUsageLimit; // uint32 maxUsageLimit
+  
+  // Repository implementation fields
+  final int maxUsage;
+  final int currentUsage;
+  final int remainingUsage;
+  final DateTime? lastUsageDate;
+  final List<DateTime> usageHistory;
 
   const PlanInfoNUsage({
     required this.planId,
     required this.oneUsagePrice,
     required this.minUsageLimit,
     required this.maxUsageLimit,
+    this.maxUsage = 0,
+    this.currentUsage = 0,
+    this.remainingUsage = 0,
+    this.lastUsageDate,
+    this.usageHistory = const [],
   });
 
   @override
-  List<Object?> get props => [planId, oneUsagePrice, minUsageLimit, maxUsageLimit];
+  List<Object?> get props => [planId, oneUsagePrice, minUsageLimit, maxUsageLimit, maxUsage, currentUsage, remainingUsage, lastUsageDate, usageHistory];
 
   PlanInfoNUsage copyWith({
     int? planId,

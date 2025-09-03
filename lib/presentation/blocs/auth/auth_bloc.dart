@@ -1,5 +1,6 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../../domain/entities/user.dart';
 import '../../../domain/repositories/user_repository.dart';
 
@@ -25,15 +26,17 @@ class AuthRegisterRequested extends AuthEvent {
   final String email;
   final String password;
   final String name;
+  final UserType type;
 
   AuthRegisterRequested({
     required this.email,
     required this.password,
     required this.name,
+    required this.type,
   });
 
   @override
-  List<Object> get props => [email, password, name];
+  List<Object> get props => [email, password, name, type];
 }
 
 class AuthLogoutRequested extends AuthEvent {}
@@ -87,11 +90,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final result = await _userRepository.getCurrentUser();
-      result.fold(
-        (error) => emit(AuthUnauthenticated()),
-        (user) => emit(AuthAuthenticated(user: user)),
-      );
+      final user = await _userRepository.getCurrentUser();
+      if (user != null) {
+        emit(AuthAuthenticated(user: user));
+      } else {
+        emit(AuthUnauthenticated());
+      }
     } catch (e) {
       emit(AuthUnauthenticated());
     }
@@ -103,11 +107,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final result = await _userRepository.login(event.email, event.password);
-      result.fold(
-        (error) => emit(AuthError(message: error)),
-        (user) => emit(AuthAuthenticated(user: user)),
-      );
+      final user = await _userRepository.login(event.email, event.password);
+      emit(AuthAuthenticated(user: user));
     } catch (e) {
       emit(AuthError(message: 'Giriş yapılırken hata oluştu'));
     }
@@ -119,15 +120,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final result = await _userRepository.register(
-        event.email,
-        event.password,
-        event.name,
+      final user = await _userRepository.register(
+        email: event.email,
+        password: event.password,
+        name: event.name,
+        type: event.type,
       );
-      result.fold(
-        (error) => emit(AuthError(message: error)),
-        (user) => emit(AuthAuthenticated(user: user)),
-      );
+      emit(AuthAuthenticated(user: user));
     } catch (e) {
       emit(AuthError(message: 'Kayıt olurken hata oluştu'));
     }

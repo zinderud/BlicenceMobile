@@ -48,10 +48,19 @@ class PlanUpdated extends PlanState {
 }
 
 class PlanPurchased extends PlanState {
-  final Plan plan;
+  final CustomerPlan customerPlan;
 
-  const PlanPurchased(this.plan);
+  const PlanPurchased(this.customerPlan);
 
   @override
-  List<Object> get props => [plan];
+  List<Object> get props => [customerPlan];
+}
+
+class CustomerPlansLoaded extends PlanState {
+  final List<CustomerPlan> customerPlans;
+
+  const CustomerPlansLoaded(this.customerPlans);
+
+  @override
+  List<Object> get props => [customerPlans];
 }

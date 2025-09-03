@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'plan.dart';
+import 'plan.dart'; // PlanStatus ve PlanType enum'ları için
 
 /// DataTypes.CustomerPlan struct ile uyumlu CustomerPlan entity
 class CustomerPlan extends Equatable {
@@ -22,6 +22,15 @@ class CustomerPlan extends Equatable {
   final double totalPaid;
   final String currency;
   final Map<String, dynamic> metadata;
+  
+  // Repository implementation fields
+  final DateTime purchaseDate;
+  final DateTime? expiryDate;
+  final int usageCount;
+  final DateTime? lastUsed;
+  final DateTime? vestingStartDate;
+  final double claimedAmount;
+  final double totalVestingAmount;
 
   const CustomerPlan({
     required this.customerAddress,
@@ -40,6 +49,13 @@ class CustomerPlan extends Equatable {
     this.totalPaid = 0.0,
     this.currency = 'USDC',
     this.metadata = const {},
+    required this.purchaseDate,
+    this.expiryDate,
+    this.usageCount = 0,
+    this.lastUsed,
+    this.vestingStartDate,
+    this.claimedAmount = 0.0,
+    this.totalVestingAmount = 0.0,
   });
 
   @override
@@ -97,6 +113,13 @@ class CustomerPlan extends Equatable {
       totalPaid: totalPaid ?? this.totalPaid,
       currency: currency ?? this.currency,
       metadata: metadata ?? this.metadata,
+      purchaseDate: this.purchaseDate,
+      expiryDate: this.expiryDate,
+      usageCount: this.usageCount,
+      lastUsed: this.lastUsed,
+      vestingStartDate: this.vestingStartDate,
+      claimedAmount: this.claimedAmount,
+      totalVestingAmount: this.totalVestingAmount,
     );
   }
 
@@ -155,6 +178,7 @@ class CustomerPlan extends Equatable {
       remainingQuota: json['remainingQuota'] as int? ?? 0,
       status: PlanStatus.values[json['status'] as int],
       planType: PlanType.values[json['planType'] as int],
+      purchaseDate: DateTime.fromMillisecondsSinceEpoch((json['startDate'] as int) * 1000), // Use startDate as purchaseDate
     );
   }
 
@@ -177,6 +201,7 @@ class CustomerPlan extends Equatable {
       'totalPaid': totalPaid,
       'currency': currency,
       'metadata': metadata,
+      'purchaseDate': purchaseDate.toIso8601String(),
     };
   }
 
@@ -199,6 +224,9 @@ class CustomerPlan extends Equatable {
       totalPaid: (json['totalPaid'] as num?)?.toDouble() ?? 0.0,
       currency: json['currency'] as String? ?? 'USDC',
       metadata: json['metadata'] as Map<String, dynamic>? ?? {},
+      purchaseDate: json['purchaseDate'] != null 
+          ? DateTime.parse(json['purchaseDate'] as String)
+          : DateTime.parse(json['startDate'] as String), // Fallback to startDate
     );
   }
 }
