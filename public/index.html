@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blicence Mobile - Web</title>
+    <meta name="description" content="Blockchain License Management Platform" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .app-container {
+        text-align: center;
+        padding: 20px;
+        max-width: 600px;
+      }
+      .title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #2563eb;
+        margin-bottom: 16px;
+      }
+      .subtitle {
+        font-size: 18px;
+        color: #6b7280;
+        margin-bottom: 8px;
+      }
+      .version {
+        font-size: 16px;
+        color: #9ca3af;
+        margin-bottom: 32px;
+      }
+      .feature-list {
+        text-align: left;
+        margin: 32px 0;
+      }
+      .feature {
+        margin: 8px 0;
+        color: #374151;
+      }
+      .cta-button {
+        background-color: #2563eb;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 8px;
+      }
+      .cta-button:hover {
+        background-color: #1d4ed8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <h1 class="title">Blicence Mobile</h1>
+      <p class="subtitle">Blockchain License Management Platform</p>
+      <p class="version">Version 1.0.0</p>
+      
+      <div class="feature-list">
+        <h3>Platform Özellikleri:</h3>
+        <div class="feature">🔐 Blockchain tabanlı lisans yönetimi</div>
+        <div class="feature">📱 Mobil ve web destekli uygulama</div>
+        <div class="feature">🏭 Üretici ve müşteri portal entegrasyonu</div>
+        <div class="feature">💰 NFT marketplace sistemi</div>
+        <div class="feature">🔔 Gerçek zamanlı bildirimler</div>
+        <div class="feature">📊 Gelişmiş analitik ve raporlama</div>
+      </div>
+      
+      <div>
+        <button class="cta-button" onclick="alert('Metro sunucusu çalışıyor! Mobile cihazda test etmek için: npx react-native run-android')">
+          Mobile Sürümü Test Et
+        </button>
+        <button class="cta-button" onclick="window.open('http://localhost:8081', '_blank')">
+          Metro Bundler Aç
+        </button>
+      </div>
+      
+      <div style="margin-top: 32px; font-size: 14px; color: #6b7280;">
+        <p>Bu web sayfası Blicence Mobile uygulamasının web versiyonudur.</p>
+        <p>Tam işlevsellik için mobile uygulamayı kullanın.</p>
+      </div>
+    </div>
+  </body>
+</html>
