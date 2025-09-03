@@ -7,7 +7,6 @@ import '../../presentation/screens/producer/producer_dashboard_screen.dart';
 import '../../presentation/screens/marketplace/marketplace_screen.dart';
 import '../../presentation/pages/plans/plans_page.dart';
 import '../../test_page.dart';
-import '../../simple_test_page.dart';
 
 class AppRouter {
   static const String login = '/login';
@@ -17,10 +16,9 @@ class AppRouter {
   static const String marketplace = '/marketplace';
   static const String plans = '/plans';
   static const String test = '/test';
-  static const String simpleTest = '/simple';
 
   static final GoRouter router = GoRouter(
-    initialLocation: simpleTest,
+    initialLocation: login,
     routes: [
       GoRoute(
         path: login,
@@ -49,10 +47,6 @@ class AppRouter {
       GoRoute(
         path: test,
         builder: (BuildContext context, GoRouterState state) => const TestPage(),
-      ),
-      GoRoute(
-        path: simpleTest,
-        builder: (BuildContext context, GoRouterState state) => const SimpleTestPage(),
       ),
     ],
   );
