@@ -19,4 +19,15 @@ abstract class PlanRepository {
     PlanStatus? status,
   });
   Stream<List<Plan>> plansStream();
+  
+  // Stream-related methods
+  Future<Either<String, CustomerPlan>> purchasePlanWithStream({
+    required int planId, 
+    required String customerAddress,
+    bool? enableStream,
+  });
+  Future<Either<String, double>> getStreamProgress(int streamLockId);
+  Future<Either<String, Map<String, dynamic>>> getStreamDetails(int streamLockId);
+  Future<Either<String, bool>> claimStreamedAmount(int streamLockId);
+  Future<Either<String, List<CustomerPlan>>> getActiveStreamPlans(String customerAddress);
 }

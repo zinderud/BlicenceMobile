@@ -1,4 +1,256 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# BlicenceMobile
+
+Bu proje, Blicence blockchain tabanlı plan yönetim sisteminin Flutter/Dart mobil uygulamasıdır. 
+
+## Proje Yapısı
+
+Bu proje Clean Architecture prensiplerine uygun olarak Flutter ile geliştirilmiştir.
+
+### Dizin Yapısı
+
+```
+lib/
+├── app/                    # Uygulama konfigürasyonu
+├── core/                   # Temel sınıflar ve yardımcılar
+├── data/                   # Veri katmanı (repositories, datasources)
+├── domain/                 # Domain katmanı (entities, usecases, repositories)
+└── presentation/           # Sunum katmanı (pages, widgets, blocs)
+```
+
+## Özellikler
+
+### 🔗 Blockchain Entegrasyonu
+- Smart contract entegrasyonu (Producer, Factory, StreamLockManager)
+- Web3 wallet bağlantısı (MetaMask, WalletConnect)
+- Blockchain transaction yönetimi
+
+### 📊 Plan Yönetimi
+- **API Plans**: Stream tabanlı abonelik planları
+- **N-Usage Plans**: Kullanım kotası ile limit tabanlı planlar
+- **Vesting API Plans**: Cliff period ve stream destekli gelecek hizmet planları
+
+### 💸 Stream Destekli Ödemeler
+- Real-time ödeme akışı (streaming payments)
+- Otomatik ödeme dağıtımı
+- Stream progress tracking
+- Claim mekanizması
+
+### 👤 Kullanıcı Rolleri
+- **Customer**: Plan satın alma ve yönetimi
+- **Producer**: Plan oluşturma ve satışı
+- **Admin**: Sistem yönetimi
+
+## Kurulum
+
+### Gereksinimler
+
+- Flutter SDK (3.0+)
+- Dart SDK (3.0+)
+- Android Studio / VS Code
+- Android device/emulator veya iOS simulator
+
+### Adımlar
+
+1. **Repository'yi klonlayın:**
+```bash
+git clone <repository-url>
+cd BlicenceMobile
+```
+
+2. **Dependencies yükleyin:**
+```bash
+flutter pub get
+```
+
+3. **Platformlara göre build:**
+
+#### Android
+```bash
+flutter run android
+```
+
+#### iOS
+```bash
+cd ios && pod install && cd ..
+flutter run ios
+```
+
+## Mimari
+
+### Clean Architecture Katmanları
+
+#### 1. Domain Layer (`lib/domain/`)
+- **Entities**: CustomerPlan, Plan, PlanInfo vb.
+- **Repositories**: Abstract repository interfaces
+- **Use Cases**: Business logic implementation
+
+#### 2. Data Layer (`lib/data/`)
+- **Repositories**: Repository implementations
+- **Data Sources**: Local/Remote data sources
+- **Models**: DTO sınıfları
+
+#### 3. Presentation Layer (`lib/presentation/`)
+- **Pages**: Ekran widget'ları
+- **Widgets**: Tekrar kullanılabilir UI component'ları
+- **BLoC**: State management (Business Logic Components)
+
+## Smart Contract Entegrasyonu
+
+### Desteklenen Contract'lar
+
+1. **Producer Contract**
+   - Plan oluşturma (`addCustomerPlanWithStream`)
+   - Stream destekli plan satın alma
+   - Kullanım validasyonu (`validateUsageWithStream`)
+
+2. **Factory Contract**
+   - Producer clone'ları yönetimi
+   - Deployment operations
+
+3. **StreamLockManager Contract**
+   - Stream lock yönetimi
+   - Ödeme akışı kontrolü
+   - Claim işlemleri
+
+### Plan Türleri
+
+#### API Plans
+```dart
+CustomerPlan(
+  planType: PlanType.api,
+  hasActiveStream: true,
+  streamLockId: 12345,
+  streamStartDate: DateTime.now(),
+  streamEndDate: DateTime.now().add(Duration(days: 30)),
+  // ...
+)
+```
+
+#### N-Usage Plans
+```dart
+CustomerPlan(
+  planType: PlanType.nUsage,
+  remainingQuota: 10,
+  hasActiveStream: true, // Optional stream support
+  // ...
+)
+```
+
+#### Vesting API Plans
+```dart
+CustomerPlan(
+  planType: PlanType.vestingApi,
+  hasActiveStream: true,
+  streamStartDate: DateTime.now().add(Duration(days: 30)), // Cliff period
+  // ...
+)
+```
+
+## State Management
+
+Bu projede **BLoC (Business Logic Component)** pattern kullanılmaktadır:
+
+### Ana BLoC'lar
+
+1. **AuthBloc**: Kullanıcı kimlik doğrulama
+2. **PlanBloc**: Plan yönetimi ve CRUD işlemleri
+3. **WalletBloc**: Wallet bağlantısı ve blockchain işlemleri
+
+### BLoC Usage Örneği
+
+```dart
+// Event
+context.read<PlanBloc>().add(LoadCustomerPlans(customerAddress));
+
+// State Listening
+BlocBuilder<PlanBloc, PlanState>(
+  builder: (context, state) {
+    if (state is CustomerPlansLoaded) {
+      return ListView.builder(
+        itemCount: state.customerPlans.length,
+        itemBuilder: (context, index) {
+          return CustomerPlanCard(
+            customerPlan: state.customerPlans[index],
+          );
+        },
+      );
+    }
+    return CircularProgressIndicator();
+  },
+)
+```
+
+## UI Components
+
+### CustomerPlanCard Widget
+
+Stream destekli customer planlarını görüntülemek için özel widget:
+
+```dart
+CustomerPlanCard(
+  customerPlan: customerPlan,
+  onTap: () => _showPlanDetails(customerPlan),
+)
+```
+
+**Özellikler:**
+- Plan bilgileri gösterimi
+- Stream progress bar
+- Real-time stream status
+- Claim button (stream progress > 10%)
+- Plan detayları dialog
+
+### Plan Types Support
+
+- ✅ API (Stream-based subscription)
+- ✅ N-Usage (Quota + Optional stream)
+- ✅ Vesting API (Cliff + Stream)
+
+## Testing
+
+### Unit Tests
+```bash
+flutter test
+```
+
+### Integration Tests
+```bash
+flutter drive --target=test_driver/app.dart
+```
+
+## Deployment
+
+### Android APK
+```bash
+flutter build apk --release
+```
+
+### iOS IPA
+```bash
+flutter build ios --release
+```
+
+## Katkıda Bulunma
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+## License
+
+Bu proje [MIT License](LICENSE) altında lisanslanmıştır.
+
+## Contact
+
+Proje ile ilgili sorularınız için issue açabilir veya iletişime geçebilirsiniz.
+
+---
+
+## React Native Migration Backup
+
+Bu proje Flutter'a migrate edilmiştir. React Native backup dosyaları `archive/react-native-backup-20250903/` dizininde bulunmaktadır.
 
 # Getting Started
 

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/router/app_router.dart';
-import '../../../domain/entities/plan.dart';
+import '../../../domain/entities/customer_plan.dart';
 import '../../blocs/plan_bloc.dart';
 import '../../blocs/auth_bloc.dart';
+import '../../widgets/customer_plan_card.dart';
 
 class CustomerDashboardScreen extends StatefulWidget {
   const CustomerDashboardScreen({super.key});
@@ -23,7 +24,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
   void _loadCustomerPlans() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      context.read<PlanBloc>().add(LoadPlansByCustomer(authState.user.id));
+      context.read<PlanBloc>().add(LoadCustomerPlans(authState.user.walletAddress ?? authState.user.id));
     }
   }
 
@@ -61,13 +62,13 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
                 builder: (context, state) {
                   if (state is PlanLoading) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is PlanLoaded) {
-                    if (state.plans.isEmpty) {
+                  } else if (state is CustomerPlansLoaded) {
+                    if (state.customerPlans.isEmpty) {
                       return const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.energy_savings_leaf, size: 64, color: Colors.grey),
+                            Icon(Icons.playlist_remove, size: 64, color: Colors.grey),
                             SizedBox(height: 16),
                             Text(
                               'Henüz plan bulunmuyor',
@@ -75,7 +76,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              'Marketplace\'den enerji planı satın alabilirsiniz',
+                              'Marketplace\'den plan satın alabilirsiniz',
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 16, color: Colors.grey),
                             ),
@@ -84,56 +85,12 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
                       );
                     }
                     return ListView.builder(
-                      itemCount: state.plans.length,
+                      itemCount: state.customerPlans.length,
                       itemBuilder: (context, index) {
-                        final plan = state.plans[index];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: _getPlanColor(plan.planType),
-                              child: Icon(
-                                _getPlanIcon(plan.planType),
-                                color: Colors.white,
-                              ),
-                            ),
-                            title: Text(
-                              plan.name,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(plan.description),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    Icon(Icons.flash_on, size: 16, color: Colors.orange),
-                                    Text(' ${plan.totalSupply} kWh'),
-                                    const SizedBox(width: 16),
-                                    Icon(Icons.star, size: 16, color: Colors.amber),
-                                    Text(' ${plan.rating.toStringAsFixed(1)}'),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            trailing: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${plan.price.toStringAsFixed(0)} ₺',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  _getPlanTypeText(plan.planType),
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
+                        final customerPlan = state.customerPlans[index];
+                        return CustomerPlanCard(
+                          customerPlan: customerPlan,
+                          onTap: () => _showPlanDetails(customerPlan),
                         );
                       },
                     );
@@ -173,42 +130,12 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
     );
   }
 
-  Color _getPlanColor(PlanType type) {
-    switch (type) {
-      case PlanType.api:
-        return Colors.green;
-      case PlanType.nUsage:
-        return Colors.blue;
-      case PlanType.vestingApi:
-        return Colors.orange;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  IconData _getPlanIcon(PlanType type) {
-    switch (type) {
-      case PlanType.api:
-        return Icons.api;
-      case PlanType.nUsage:
-        return Icons.credit_card;
-      case PlanType.vestingApi:
-        return Icons.schedule;
-      default:
-        return Icons.help;
-    }
-  }
-
-  String _getPlanTypeText(PlanType type) {
-    switch (type) {
-      case PlanType.api:
-        return 'API Abonelik';
-      case PlanType.nUsage:
-        return 'Kullanım Kartı';
-      case PlanType.vestingApi:
-        return 'Gelecek Hizmet';
-      default:
-        return 'Bilinmeyen';
-    }
+  void _showPlanDetails(CustomerPlan customerPlan) {
+    // Navigate to plan details page or show detailed dialog
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Plan detayları: ${customerPlan.customerPlanId}'),
+      ),
+    );
   }
 }

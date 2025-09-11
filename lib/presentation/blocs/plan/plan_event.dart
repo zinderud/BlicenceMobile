@@ -56,10 +56,10 @@ class PurchasePlan extends PlanEvent {
 }
 
 class LoadCustomerPlans extends PlanEvent {
-  final int customerId;
+  final String customerAddress;
 
-  LoadCustomerPlans(this.customerId);
+  LoadCustomerPlans(this.customerAddress);
 
   @override
-  List<Object> get props => [customerId];
+  List<Object> get props => [customerAddress];
 }

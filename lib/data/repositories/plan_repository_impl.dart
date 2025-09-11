@@ -307,4 +307,135 @@ class PlanRepositoryImpl implements PlanRepository {
     // In a real implementation, this would stream from blockchain events
     return Stream.periodic(const Duration(seconds: 5), (_) => _mockPlans);
   }
+
+  @override
+  Future<Either<String, CustomerPlan>> purchasePlanWithStream({
+    required int planId, 
+    required String customerAddress,
+    bool? enableStream,
+  }) async {
+    try {
+      await Future.delayed(const Duration(seconds: 2)); // Simulate blockchain transaction
+      
+      final plan = _mockPlans.firstWhere((p) => p.planId == planId);
+      final now = DateTime.now();
+      
+      // Determine if stream should be enabled based on plan type
+      final shouldEnableStream = enableStream ?? 
+          (plan.planType == PlanType.api || plan.planType == PlanType.vestingApi);
+      
+      final customerPlan = CustomerPlan(
+        customerAddress: customerAddress,
+        planId: planId,
+        customerPlanId: DateTime.now().millisecondsSinceEpoch % 100000,
+        producerId: plan.producerId,
+        cloneAddress: plan.cloneAddress,
+        priceAddress: plan.priceAddress,
+        startDate: now,
+        endDate: plan.duration > 0 ? now.add(Duration(days: plan.duration)) : now.add(const Duration(days: 365)),
+        remainingQuota: plan.maxUsage,
+        status: PlanStatus.active,
+        planType: plan.planType,
+        totalPaid: plan.price,
+        currency: 'USDC',
+        metadata: {'purchaseTransactionHash': '0x${DateTime.now().millisecondsSinceEpoch.toRadixString(16)}'},
+        purchaseDate: now,
+        // Stream fields
+        streamLockId: shouldEnableStream ? DateTime.now().millisecondsSinceEpoch % 1000000 : null,
+        hasActiveStream: shouldEnableStream,
+        streamStartDate: shouldEnableStream ? now : null,
+        streamEndDate: shouldEnableStream && plan.duration > 0 
+            ? now.add(Duration(days: plan.duration)) 
+            : (shouldEnableStream ? now.add(const Duration(days: 365)) : null),
+        streamedAmount: 0.0,
+        remainingStreamAmount: shouldEnableStream ? plan.price : 0.0,
+        streamDuration: shouldEnableStream && plan.duration > 0 ? plan.duration * 24 * 60 * 60 : null, // seconds
+      );
+
+      return Right(customerPlan);
+    } catch (e) {
+      return Left('Failed to purchase plan with stream: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<String, double>> getStreamProgress(int streamLockId) async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      // Mock calculation - in real implementation, this would query StreamLockManager
+      final random = DateTime.now().millisecondsSinceEpoch % 100;
+      final progress = (random / 100).clamp(0.0, 1.0);
+      
+      return Right(progress);
+    } catch (e) {
+      return Left('Failed to get stream progress: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<String, Map<String, dynamic>>> getStreamDetails(int streamLockId) async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      // Mock stream details - in real implementation, this would query blockchain
+      final now = DateTime.now();
+      const duration = Duration(days: 30);
+      final startDate = now.subtract(const Duration(days: 5));
+      final endDate = startDate.add(duration);
+      final elapsed = now.difference(startDate).inSeconds;
+      final totalDuration = duration.inSeconds;
+      final progress = (elapsed / totalDuration).clamp(0.0, 1.0);
+      
+      return Right({
+        'streamLockId': streamLockId,
+        'startDate': startDate.toIso8601String(),
+        'endDate': endDate.toIso8601String(),
+        'totalAmount': 100.0,
+        'streamedAmount': 100.0 * progress,
+        'remainingAmount': 100.0 * (1 - progress),
+        'progress': progress,
+        'isActive': progress < 1.0,
+        'canClaim': progress > 0.1, // Can claim after 10% progress
+      });
+    } catch (e) {
+      return Left('Failed to get stream details: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<String, bool>> claimStreamedAmount(int streamLockId) async {
+    try {
+      await Future.delayed(const Duration(seconds: 1)); // Simulate blockchain transaction
+      
+      // Mock claim operation - in real implementation, this would call smart contract
+      return const Right(true);
+    } catch (e) {
+      return Left('Failed to claim streamed amount: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<String, List<CustomerPlan>>> getActiveStreamPlans(String customerAddress) async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      // Get all customer plans and filter for active streams
+      final allPlansResult = await getCustomerPlans(customerAddress);
+      
+      return allPlansResult.fold(
+        (error) => Left(error),
+        (plans) {
+          final streamPlans = plans.where((plan) => 
+            plan.hasActiveStream && 
+            plan.streamLockId != null &&
+            !plan.isStreamExpired
+          ).toList();
+          return Right(streamPlans);
+        },
+      );
+    } catch (e) {
+      return Left('Failed to get active stream plans: ${e.toString()}');
+    }
+  }
 }

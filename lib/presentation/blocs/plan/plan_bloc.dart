@@ -189,7 +189,7 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
   Future<void> _onLoadCustomerPlans(LoadCustomerPlans event, Emitter<PlanState> emit) async {
     emit(PlanLoading());
     
-    final result = await _planRepository.getCustomerPlans(event.customerId.toString());
+    final result = await _planRepository.getCustomerPlans(event.customerAddress);
     result.fold(
       (error) => emit(PlanError(error)),
       (customerPlans) => emit(CustomerPlansLoaded(customerPlans)),
